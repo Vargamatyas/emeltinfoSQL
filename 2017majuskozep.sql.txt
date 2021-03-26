@@ -1,0 +1,26 @@
+SELECT Eloadas.cim, Eloadas.ido
+FROM Eloadas
+WHERE eloadas.ido like '2006*'
+ORDER BY eloadas.cim;
+
+SELECT Tudos.nev, Eloadas.cim
+FROM Tudos INNER JOIN (Eloadas INNER JOIN Kapcsolo ON Eloadas.id = Kapcsolo.eloadasid) ON Tudos.[﻿id] = Kapcsolo.tudosid
+WHERE eloadas.cim like '*nyelv*';
+
+SELECT Tudos.terulet, Count(Tudos.nev) AS CountOfnev
+FROM Tudos
+GROUP BY Tudos.terulet
+ORDER BY Count(Tudos.nev) DESC;
+
+SELECT Tudos.nev, Count(Kapcsolo.eloadasid) AS eloadasok_száma
+FROM Tudos INNER JOIN Kapcsolo ON Tudos.[﻿id] = Kapcsolo.tudosid
+GROUP BY Tudos.nev
+HAVING COUNT(*) > 1;
+
+SELECT left ([eloadas.ido], len([eloadas.ido])-3) as ido
+FROM Eloadas
+WHERE Eloadas.cim = "Mit tud az emberi agy?";
+
+SELECT Eloadas.cim, Tudos.nev, Tudos.terulet
+FROM 6seged, Tudos INNER JOIN (Eloadas INNER JOIN Kapcsolo ON Eloadas.id = Kapcsolo.eloadasid) ON Tudos.[﻿id] = Kapcsolo.tudosid
+WHERE eloadas.ido like ([6seged].ido&'*');
