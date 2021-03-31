@@ -1,0 +1,44 @@
+SELECT Film.cim, Film.gyartas
+FROM Film
+WHERE (bemutato is NULL) or (hossz is NULL);
+
+SELECT Film.cim
+FROM Film
+WHERE Film.gyartas = year(bemutato);
+
+SELECT (Sum(Film.hossz)/60)/10 AS nap
+FROM Film
+WHERE hossz is not NULL and film.youtube = True;
+
+SELECT TOP 1 Film.bemutato
+FROM Film
+WHERE Film.bemutato < #24-12-1944#
+ORDER BY Film.bemutato DESC;
+
+SELECT Film.gyartas, Count(Film.cim) AS filmperev
+FROM Szemely INNER JOIN (Film INNER JOIN Feladat ON Film.id = Feladat.filmid) ON Szemely.id = Feladat.szemelyid
+WHERE szemely.nev = 'Kabos Gyula'
+GROUP BY Film.gyartas;
+
+SELECT Sum(filmperev)  / (max(gyartas) - min(gyartas)) AS film_per_ev
+FROM 6seged;
+
+SELECT Film.hossz
+FROM Szemely INNER JOIN (Film INNER JOIN Feladat ON Film.id = Feladat.filmid) ON Szemely.id = Feladat.szemelyid
+WHERE (((Film.cim)='Pesti mese')) and szemely.nev = 'Turay Ida';
+
+SELECT Film.cim
+FROM Szemely INNER JOIN (Film INNER JOIN Feladat ON Film.id = Feladat.filmid) ON Szemely.id = Feladat.szemelyid
+WHERE Film.youtube = True and Szemely.nev = 'Turay Ida' and Film.hossz < (SELECT Film.hossz
+FROM Szemely INNER JOIN (Film INNER JOIN Feladat ON Film.id = Feladat.filmid) ON Szemely.id = Feladat.szemelyid
+WHERE (((Film.cim)='Pesti mese')) and szemely.nev = 'Turay Ida';);
+
+SELECT Film.cim, Feladat.filmid
+FROM Szemely INNER JOIN (Film INNER JOIN Feladat ON Film.id = Feladat.filmid) ON Szemely.id = Feladat.szemelyid
+GROUP BY Film.cim, Szemely.nev, Feladat.filmid
+HAVING (((Szemely.nev)='Pethes Ferenc'));
+
+SELECT Szemely.id
+FROM 8seged INNER JOIN (Szemely INNER JOIN Feladat ON Szemely.id = Feladat.szemelyid) ON [8seged].filmid = Feladat.filmid
+GROUP BY [8seged].cim, Szemely.id;
+

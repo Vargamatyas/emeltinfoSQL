@@ -1,0 +1,25 @@
+SELECT kezdeseve
+FROM Osztaly
+WHERE vegzeseve - kezdeseve = 5
+ORDER BY kezdeseve;
+
+SELECT DISTINCT tanar.nev
+FROM Tanar INNER JOIN (Osztaly INNER JOIN Tanitja ON Osztaly.id = Tanitja.osztalyid) ON Tanar.id = Tanitja.tanarid
+WHERE Osztaly.vegzeseve between 1970 and 1979
+GROUP BY Tanar.nev, Osztaly.vegzeseve
+HAVING count(*);
+
+SELECT min(kezdeseve+1)
+FROM osztaly
+WHERE kezdeseve+1 NOT IN (SELECT Osztaly.kezdeseve
+FROM Osztaly;);
+
+SELECT (SELECT count(Osztaly.id)
+FROM Osztaly;) - count( Osztaly.id) AS hianyzik
+FROM Tanar INNER JOIN (Osztaly INNER JOIN Tanitja ON Osztaly.id = Tanitja.osztalyid) ON Tanar.id = Tanitja.tanarid
+WHERE Osztaly.id in(SELECT Tanitja.osztalyid
+FROM Tanitja;);
+
+SELECT Hallgato.nev, osztaly.kezdeseve
+FROM Osztaly INNER JOIN (Tanar INNER JOIN Hallgato ON Tanar.nev = Hallgato.nev) ON Osztaly.id = Hallgato.osztalyid
+WHERE (((Tanar.nev)=[Hallgato].[nev]));

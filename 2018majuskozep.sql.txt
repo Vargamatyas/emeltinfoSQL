@@ -1,0 +1,27 @@
+SELECT Labdarugo.vezeteknev, Labdarugo.utonev
+FROM Labdarugo
+WHERE Labdarugo.magyar = -1 and Labdarugo.kulfoldi = -1;
+
+SELECT TOP 1 Labdarugo.vezeteknev, Labdarugo.utonev, Labdarugo.szulido
+FROM Poszt INNER JOIN Labdarugo ON Poszt.id = Labdarugo.posztid
+WHERE Poszt.nev <> 'kapus'
+ORDER BY Labdarugo.szulido;
+
+SELECT Klub.csapatnev, Sum(Labdarugo.ertek) AS összérték
+FROM Klub INNER JOIN Labdarugo ON Klub.id = Labdarugo.klubid
+GROUP BY Klub.csapatnev;
+
+SELECT Labdarugo.vezeteknev, Labdarugo.szulido, Poszt.nev
+FROM Poszt INNER JOIN Labdarugo ON Poszt.id = Labdarugo.posztid
+WHERE (Poszt.nev = 'kapus' or Poszt.nev like '*bal*') and Labdarugo.szulido > '1998.01.01';
+
+SELECT Klub.csapatnev, Poszt.nev
+FROM Poszt INNER JOIN (Klub INNER JOIN Labdarugo ON Klub.id = Labdarugo.klubid) ON Poszt.id = Labdarugo.posztid
+GROUP BY Klub.csapatnev, Poszt.nev
+HAVING count(*) = 1;
+
+SELECT Labdarugo.vezeteknev, Labdarugo.utonev
+FROM Klub INNER JOIN Labdarugo ON Klub.id = Labdarugo.klubid
+WHERE Klub.csapatnev in (SELECT Klub.csapatnev
+FROM Klub INNER JOIN Labdarugo ON Klub.id = Labdarugo.klubid
+where Labdarugo.VEZETEKNEV = 'Lanzafame');

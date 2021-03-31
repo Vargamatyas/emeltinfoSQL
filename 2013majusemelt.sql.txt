@@ -1,0 +1,28 @@
+SELECT Vt.nev, Vt.terulet
+FROM Vt
+WHERE Vt.kategoria = 'TK'
+ORDER BY Vt.terulet DESC;
+
+SELECT TOP 1 Vt.nev, Vt.terulet, Igazgatosag.nev
+FROM Igazgatosag INNER JOIN Vt ON Igazgatosag.id = Vt.igid
+WHERE Vt.kategoria = 'TK'
+ORDER BY Vt.terulet;
+
+SELECT max(terulet) / min(terulet) AS arány
+FROM Vt
+WHERE kategoria = 'TT';
+
+SELECT DISTINCT Vt.nev
+FROM Igazgatosag INNER JOIN Vt ON Igazgatosag.id = Vt.igid
+GROUP BY Igazgatosag.nev, Vt.nev
+HAVING Igazgatosag.nev = 'Duna-Ipoly Nemzeti Park Igazgatóság'
+ORDER BY Vt.nev;
+
+SELECT TOP 1 Vt.nev, Count(Telepules.nev) AS db
+FROM Telepules INNER JOIN (Vt INNER JOIN Kapcsolo ON Vt.id = Kapcsolo.vtid) ON Telepules.id = Kapcsolo.telepid
+GROUP BY Vt.nev
+ORDER BY Count(Telepules.nev) DESC;
+
+SELECT Vt.nev, Telepules.nev
+FROM Telepules INNER JOIN (Vt INNER JOIN Kapcsolo ON Vt.id = Kapcsolo.vtid) ON Telepules.id = Kapcsolo.telepid
+WHERE Vt.nev not like('*' & Telepules.nev & '*')

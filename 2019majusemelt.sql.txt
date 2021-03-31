@@ -1,0 +1,33 @@
+SELECT TOP 1 Urhajos.nev, Urhajos.urido
+FROM Urhajos
+ORDER BY urhajos.urido DESC;
+
+SELECT Kuldetes.id, left([Kuldetes.kezdet], len([Kuldetes.veg])-6)
+FROM Kuldetes;
+
+SELECT Urhajos.nev, min([4seged].Expr1001) - Urhajos.szulev AS eletkor_elso_kuldetes, max([4seged].Expr1001) - Urhajos.szulev AS eletkor_utolso_kuldetes
+FROM (Urhajos INNER JOIN Repules ON Urhajos.id = Repules.urhajosid) INNER JOIN 4seged ON Repules.kuldetesid = [4seged].id
+GROUP BY Urhajos.nev, Urhajos.szulev
+HAVING min([4seged].Expr1001) - Urhajos.szulev <> max([4seged].Expr1001) - Urhajos.szulev;
+
+SELECT Urhajos.orszag, Count(Urhajos.nev) AS urhajosszam
+FROM Urhajos
+GROUP BY Urhajos.orszag
+ORDER BY Count(Urhajos.nev) DESC;
+
+SELECT Urhajos.orszag
+FROM Urhajos;
+
+SELECT allekerdezes.orszag, Count(allekerdezes.orszag) AS db_urhajos
+FROM (SELECT orszag FROM allekerdezes6)  AS allekerdezes
+GROUP BY allekerdezes.orszag
+ORDER BY Count(allekerdezes.orszag) DESC;
+
+SELECT Kuldetes.megnevezes, Urhajos.[nem]
+FROM Urhajos INNER JOIN (Kuldetes INNER JOIN Repules ON Kuldetes.id = Repules.kuldetesid) ON Urhajos.id = Repules.urhajosid
+GROUP BY Kuldetes.megnevezes, Urhajos.[nem]
+
+SELECT Kuldetes.megnevezes as kuldetes_nevek
+FROM Kuldetes INNER JOIN 7seged ON Kuldetes.megnevezes = [7seged].megnevezes
+group by Kuldetes.megnevezes
+having count(*) >1
