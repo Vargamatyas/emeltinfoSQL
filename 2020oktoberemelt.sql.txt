@@ -1,0 +1,32 @@
+SELECT Tevekenyseg.nev
+FROM Tevekenyseg
+WHERE Tevekenyseg.iskolai = True
+ORDER BY Tevekenyseg.nev;
+
+SELECT sum(Munka.hossz * Munka.maxletszam) AS ossz_oraszam
+FROM Munka;
+
+SELECT Diak.nev, Munka.datum, Munka.kezdes, Munka.hossz, Tevekenyseg.nev
+FROM Diak INNER JOIN (Tevekenyseg INNER JOIN (Munka INNER JOIN Jelentkezes ON Munka.id = Jelentkezes.munkaid) ON Tevekenyseg.id = Munka.tevekenysegid) ON Diak.id = Jelentkezes.diakid
+ORDER BY Diak.nev, Munka.datum;
+
+SELECT Diak.nev
+FROM Diak INNER JOIN Jelentkezes ON Diak.id = Jelentkezes.diakid
+WHERE Jelentkezes.elfogadva = True and Jelentkezes.teljesitve = False
+GROUP BY Diak.nev
+HAVING count(*) > 1;
+
+SELECT munka.datum, munka.kezdes, munka.hossz, tevekenyseg.nev
+FROM Tevekenyseg INNER JOIN (Munka LEFT JOIN Jelentkezes ON Munka.id = Jelentkezes.munkaid) ON Tevekenyseg.id = Munka.tevekenysegid
+WHERE Jelentkezes.munkaid is NULL and munka.datum BETWEEN #10/29/2016# and #11/6/2016#
+ORDER BY munka.datum, munka.kezdes;
+
+SELECT DISTINCT Diak.nev, Diak.osztaly, Jelentkezes.teljesitve
+FROM Diak INNER JOIN Jelentkezes ON Diak.id = Jelentkezes.diakid
+WHERE Jelentkezes.teljesitve = True
+ORDER BY Diak.osztaly;
+
+SELECT [7seged].osztaly, Count([7seged].nev) AS CountOfnev
+FROM 7seged
+GROUP BY [7seged].osztaly
+ORDER BY [7seged].osztaly DESC;

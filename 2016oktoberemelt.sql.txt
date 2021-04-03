@@ -1,0 +1,37 @@
+SELECT Szemely.nev
+FROM Szemely
+WHERE Szemely.ev = 2013
+ORDER BY Szemely.nev;
+
+SELECT Szemely.nev, Foglalkozas.fognev
+FROM Foglalkozas INNER JOIN (Szemely INNER JOIN Kapcsolo ON Szemely.az = Kapcsolo.szemaz) ON Foglalkozas.az = Kapcsolo.fogaz
+WHERE Foglalkozas.fognev like '*balett*';
+
+SELECT TOP 1 Szemely.ev, Count(Szemely.nev) AS dijazottakszama
+FROM Szemely
+GROUP BY Szemely.ev
+ORDER BY Count(Szemely.nev) DESC;
+
+SELECT Foglalkozas.fognev, Count(Szemely.nev) AS db
+FROM Szemely INNER JOIN (Foglalkozas INNER JOIN Kapcsolo ON Foglalkozas.az = Kapcsolo.fogaz) ON Szemely.az = Kapcsolo.szemaz
+GROUP BY Foglalkozas.fognev
+ORDER BY Count(Szemely.nev) DESC;
+
+SELECT Szemely.nev, foglalkozas.fognev
+FROM Szemely INNER JOIN (Foglalkozas INNER JOIN Kapcsolo ON Foglalkozas.az = Kapcsolo.fogaz) ON Szemely.az = Kapcsolo.szemaz
+WHERE foglalkozas.fognev = (SELECT Foglalkozas.fognev
+FROM Szemely INNER JOIN (Foglalkozas INNER JOIN Kapcsolo ON Foglalkozas.az = Kapcsolo.fogaz) ON Szemely.az = Kapcsolo.szemaz
+WHERE Szemely.nev = 'Pitti Katalin');
+
+SELECT DISTINCT Foglalkozas.fognev
+FROM Szemely INNER JOIN (Foglalkozas INNER JOIN Kapcsolo ON Foglalkozas.az = Kapcsolo.fogaz) ON Szemely.az = Kapcsolo.szemaz
+WHERE Szemely.nev in (SELECT Szemely.nev
+FROM Szemely INNER JOIN (Foglalkozas INNER JOIN Kapcsolo ON Foglalkozas.az = Kapcsolo.fogaz) ON Szemely.az = Kapcsolo.szemaz
+WHERE Foglalkozas.fognev like '*grafikus*') and Foglalkozas.fognev not like '*grafikus*';
+
+SELECT Szemely.az
+FROM Szemely INNER JOIN (Foglalkozas INNER JOIN Kapcsolo ON Foglalkozas.az = Kapcsolo.fogaz) ON Szemely.az = Kapcsolo.szemaz
+WHERE Foglalkozas.fognev in(SELECT Foglalkozas.fognev
+FROM Szemely INNER JOIN (Foglalkozas INNER JOIN Kapcsolo ON Foglalkozas.az = Kapcsolo.fogaz) ON Szemely.az = Kapcsolo.szemaz
+GROUP BY Foglalkozas.fognev
+HAVING count(*) = 1);
