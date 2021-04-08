@@ -1,0 +1,35 @@
+SELECT Telek.telepules
+FROM Telek
+WHERE telek.allapot = 'S'
+ORDER BY Telek.muvmod, Telek.telepules;
+
+SELECT Telek.telepules, Nyersanyag.nev, Telek.fedoszint
+FROM Telek INNER JOIN (Nyersanyag INNER JOIN Kapcsolo ON Nyersanyag.id = Kapcsolo.nyersanyagid) ON Telek.id = Kapcsolo.telekid
+WHERE Telek.fedoszint < 0;
+
+SELECT Telek.telepules, Telek.fedoszint, Telek.fekuszint
+FROM Telek INNER JOIN (Nyersanyag INNER JOIN Kapcsolo ON Nyersanyag.id = Kapcsolo.nyersanyagid) ON Telek.id = Kapcsolo.telekid
+WHERE Nyersanyag.nev = '*Dolomit*' and Telek.allapot = 'M';
+
+SELECT TOP 3 Telek.telepules, Telek.fedoszint - Telek.fekuszint AS vastagság, Nyersanyag.nev
+FROM Nyersanyag INNER JOIN (Telek INNER JOIN Kapcsolo ON Telek.id = Kapcsolo.telekid) ON Nyersanyag.id = Kapcsolo.nyersanyagid
+WHERE Nyersanyag.nev like '*kavics*'
+ORDER BY Telek.fedoszint - Telek.fekuszint DESC;
+
+SELECT Telek.telepules, Nyersanyag.nev
+FROM Nyersanyag INNER JOIN (Telek INNER JOIN Kapcsolo ON Telek.id = Kapcsolo.telekid) ON Nyersanyag.id = Kapcsolo.nyersanyagid
+WHERE (Telek.fedoszint between 450 and 550)  or (Telek.fekuszint between 450 and 550);
+
+SELECT TOP 1 Nyersanyag.nev AS nyersanyag_neve, Count(Telek.id) AS db
+FROM Nyersanyag INNER JOIN (Telek INNER JOIN Kapcsolo ON Telek.id = Kapcsolo.telekid) ON Nyersanyag.id = Kapcsolo.nyersanyagid
+GROUP BY Nyersanyag.nev
+ORDER BY Count(Telek.id) DESC;
+
+SELECT DISTINCT Telek.telepules
+FROM Telek
+WHERE Telek.allapot <> 'B';
+
+SELECT Nyersanyag.nev AS nyersanyagnev, Telek.telepules AS banyatelek_telepules, Telek.allapot AS tevekenyseg_jellege
+FROM Nyersanyag INNER JOIN (Telek INNER JOIN Kapcsolo ON Telek.id = Kapcsolo.telekid) ON Nyersanyag.id = Kapcsolo.nyersanyagid
+WHERE Nyersanyag.nev like '*agyag*'
+ORDER BY Nyersanyag.nev, Telek.telepules;

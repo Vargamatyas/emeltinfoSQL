@@ -1,0 +1,37 @@
+SELECT Hallgato.nev
+FROM Kar INNER JOIN Hallgato ON Kar.id = Hallgato.karid
+WHERE kar.nev = 'MED'
+ORDER BY Hallgato.nev;
+
+SELECT sum(lap) / 500 AS csomag
+FROM Masolas;
+
+SELECT DISTINCT Hallgato.nev
+FROM (Kar INNER JOIN Hallgato ON Kar.id = Hallgato.karid) INNER JOIN Masolas ON Hallgato.id = Masolas.hallgatoid
+WHERE Kar.nev in('PPK', 'TKK') and Masolas.datum between #24-12-2012# and #1-1-2013#;
+
+SELECT DISTINCT Hallgato.nev
+FROM (Kar INNER JOIN Hallgato ON Kar.id = Hallgato.karid) INNER JOIN Masolas ON Hallgato.id = Masolas.hallgatoid
+GROUP BY Masolas.datum, Hallgato.nev
+HAVING count(*) > 1;
+
+SELECT Hallgato.nev, Max(Masolas.datum) AS MaxOfdatum
+FROM (Kar INNER JOIN Hallgato ON Kar.id = Hallgato.karid) INNER JOIN Masolas ON Hallgato.id = Masolas.hallgatoid
+WHERE Kar.nev = 'IK'
+GROUP BY Hallgato.nev;
+
+SELECT DISTINCT hallgato.nev
+FROM hallgato INNER JOIN Masolas ON hallgato.id = Masolas.hallgatoid
+WHERE Masolas.datum = (SELECT top 1  Masolas.datum
+FROM Hallgato INNER JOIN Masolas ON Hallgato.id = Masolas.hallgatoid
+WHERE Hallgato.nev = 'Eszes Albert' 
+ORDER BY Masolas.datum) and hallgato.nev <> 'Eszes Albert';
+
+SELECT Hallgato.id AS hallgatoid, Count(Masolas.oldal) AS osszesen
+FROM Hallgato INNER JOIN Masolas ON Hallgato.id = Masolas.hallgatoid
+GROUP BY Hallgato.id;
+
+SELECT Hallgato.nev
+FROM Hallgato
+WHERE Hallgato.id not in (SELECT distinct Masolas.hallgatoid
+FROM Masolas);

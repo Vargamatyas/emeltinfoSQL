@@ -1,0 +1,32 @@
+SELECT Munka.datum, Munka.oradij
+FROM Munka
+WHERE Munka.oraszam = 4 and Munka.allas like '*kisegítő*';
+
+SELECT DISTINCT Munka.datum
+FROM Munka
+WHERE Munka.diakaz is NULL;
+
+SELECT count(Munka.munkaid) AS munkaszám
+FROM Munka;
+
+SELECT Munka.datum, Munka.allas, Munka.oradij, Munka.oraszam
+FROM Munka
+GROUP BY Munka.datum, Munka.allas, Munka.oradij, Munka.oraszam;
+
+SELECT TOP 1 Munkaado.nev
+FROM Munkaado INNER JOIN Munka ON Munkaado.mhelyid = Munka.mhelyid
+WHERE munka.kozepiskolas = True
+GROUP BY Munkaado.nev
+ORDER BY Avg(Munka.oradij) DESC;
+
+SELECT Diak.nev, sum(Munka.oradij * Munka.oraszam) AS kereset
+FROM Diak INNER JOIN Munka ON Diak.diakaz = Munka.diakaz
+GROUP BY Diak.diakaz, Diak.nev;
+
+SELECT Munka.datum, Munkaado.nev
+FROM Munkaado INNER JOIN (Diak INNER JOIN Munka ON Diak.diakaz = Munka.diakaz) ON Munkaado.mhelyid = Munka.mhelyid
+WHERE (((Diak.nev)='Kos Péter'));
+
+SELECT distinct Diak.nev
+FROM Diak INNER JOIN Munka ON Diak.diakaz = Munka.diakaz
+WHERE Diak.szulido >= #01/01/1988# and munka.allas in ('kézbesítő', 'futár');

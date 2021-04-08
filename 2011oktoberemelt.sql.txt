@@ -1,0 +1,43 @@
+SELECT DISTINCT Tk.targy
+FROM Tk
+WHERE Tk.kiadoikod like '*NK*';
+
+SELECT DISTINCT Tk.cim
+FROM Tk INNER JOIN (Rendeles INNER JOIN Tkar ON (Rendeles.ev = Tkar.ev) AND (Rendeles.ev = Tkar.ev) AND (Rendeles.tkaz = Tkar.tkaz)) ON Tk.az = Tkar.tkaz
+WHERE (Rendeles.ev BETWEEN 2004 and 2006) and tk.targy in('történelem', 'irodalom')  and tkar.ertek = (SELECT max(Tkar.ertek) as max
+FROM Tk INNER JOIN (Rendeles INNER JOIN Tkar ON (Rendeles.tkaz = Tkar.tkaz) AND (Rendeles.ev = Tkar.ev) AND (Rendeles.ev = Tkar.ev)) ON Tk.az = Tkar.tkaz
+WHERE (Rendeles.ev BETWEEN 2004 and 2006) and tk.targy in('történelem', 'irodalom') );
+
+SELECT Rendeles.ev, Sum(Tkar.ertek) AS befolytösszeg
+FROM Rendeles INNER JOIN Tkar ON (Rendeles.ev = Tkar.ev) AND (Rendeles.ev = Tkar.ev) AND (Rendeles.tkaz = Tkar.tkaz)
+WHERE Rendeles.ingyenes = False
+GROUP BY Rendeles.ev;
+
+SELECT Tk.cim, Tk.kiadoikod
+FROM Tk
+WHERE (((Tk.az) Not In (SELECT  Rendeles.tkaz
+FROM Rendeles left JOIN Tk ON Rendeles.tkaz = Tk.az;)));
+
+6seged: (SELECT DISTINCT Tk.cim, Tkar.ertek
+FROM Tk INNER JOIN (Rendeles INNER JOIN Tkar ON (Rendeles.ev = Tkar.ev) AND (Rendeles.ev = Tkar.ev) AND (Rendeles.tkaz = Tkar.tkaz)) ON Tk.az = Tkar.tkaz
+WHERE Rendeles.ev = 2006;)
+
+6seged2: (SELECT DISTINCT Tk.cim, Tkar.ertek
+FROM Tk INNER JOIN (Rendeles INNER JOIN Tkar ON (Rendeles.ev = Tkar.ev) AND (Rendeles.ev = Tkar.ev) AND (Rendeles.tkaz = Tkar.tkaz)) ON Tk.az = Tkar.tkaz
+WHERE Rendeles.ev = 2007;)
+
+SELECT [6seged2].cim
+FROM 6seged INNER JOIN 6seged2 ON [6seged].cim = [6seged2].cim
+WHERE [6seged2].ertek < [6seged].ertek;
+
+SELECT Tk.cim, Count(Rendeles.az) AS db
+FROM Tk INNER JOIN (Rendeles INNER JOIN Tkar ON (Rendeles.ev = Tkar.ev) AND (Rendeles.ev = Tkar.ev) AND (Rendeles.tkaz = Tkar.tkaz)) ON Tk.az = Tkar.tkaz
+WHERE Rendeles.ev =  (SELECT max(Rendeles.ev)
+FROM Rendeles;)
+GROUP BY Tk.cim
+HAVING count(*) > 50
+ORDER BY Tk.cim;
+
+SELECT DISTINCT Diak.osztaly, Diak.az AS diak
+FROM Diak INNER JOIN Rendeles ON Diak.az = Rendeles.diakaz
+WHERE Rendeles.ingyenes = True;
